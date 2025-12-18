@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Simple Navigation",
+  "version": "1.0.0",
+  "description": "静态导航新标签页",
+  "chrome_url_overrides": {
+    "newtab": "index.html"
+  },
+  "icons": {
+    "192": "apple-icon.png"
+  },
+  "host_permissions": [
+    "<all_urls>"
+  ]
+}

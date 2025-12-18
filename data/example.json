@@ -1,0 +1,31 @@
+[
+  {
+    "title": "awesome",
+    "links": [
+      {
+        "name": "translate",
+        "url": "https://translate.google.com/?hl=zh-CN&tab=wT"
+      },
+      {
+        "name": "github",
+        "url": "https://github.com/"
+      },
+      {
+        "name": "nodeseek",
+        "url": "https://www.nodeseek.com/"
+      },
+      {
+        "name": "zhihu",
+        "url": "https://www.zhihu.com/knowledge-plan/hot-question/hot/0/hour"
+      },
+      {
+        "name": "bilibili",
+        "url": "http://www.bilibili.com"
+      },
+      {
+        "name": "v2ex",
+        "url": "https://www.v2ex.com/"
+      }
+    ]
+  }
+]
