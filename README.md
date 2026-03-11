@@ -24,6 +24,9 @@ A static navigation page project built with Next.js, supporting export as pure s
 *   **Icons**: Lucide React
 *   **Components**: Shadcn UI (Radix UI)
 
+## Sample Image
+
+
 ## 🚀 Development Guide
 
 ### 1. Install Dependencies
