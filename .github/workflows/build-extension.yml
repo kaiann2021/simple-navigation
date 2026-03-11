@@ -33,6 +33,6 @@ jobs:
       - name: Upload Extension Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mynav-chrome-extension
+          name: simple-navigation-chrome-extension
           path: out/
           if-no-files-found: error
