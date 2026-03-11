@@ -1,0 +1,321 @@
+{
+  "type": "document",
+  "children": [
+    {
+      "type": "frame",
+      "id": "x2DNd",
+      "x": 0,
+      "y": 0,
+      "name": "Simple Navigation",
+      "width": 1440,
+      "height": 900,
+      "fill": "#0B1220",
+      "layout": "horizontal",
+      "gap": 0,
+      "padding": 0,
+      "children": [
+        {
+          "type": "frame",
+          "id": "qQYxg",
+          "name": "Sidebar",
+          "width": 240,
+          "height": "fill_container",
+          "fill": "#0F1B2D",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": 16,
+          "children": [
+            {
+              "type": "text",
+              "id": "cQSwA",
+              "name": "brand",
+              "content": "Simple Navigation",
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "normal",
+              "fill": "#E6EEF8"
+            },
+            {
+              "type": "frame",
+              "id": "qp7KP",
+              "name": "Nav",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "HM4A0",
+                  "name": "Nav Item: Home",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "#172A46",
+                  "cornerRadius": 8,
+                  "layout": "horizontal",
+                  "alignItems": "center",
+                  "gap": 8,
+                  "padding": [
+                    12,
+                    8
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "I6Bb3",
+                      "name": "itemHomeText",
+                      "content": "Home",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal",
+                      "fill": "#E6EEF8"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "7K3X6",
+                  "name": "Nav Item: Docs",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "#0F1B2D",
+                  "cornerRadius": 8,
+                  "layout": "horizontal",
+                  "alignItems": "center",
+                  "gap": 8,
+                  "padding": [
+                    12,
+                    8
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "NB2ST",
+                      "name": "itemDocsText",
+                      "content": "Docs",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal",
+                      "fill": "#C7D2E1"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "mpd14",
+                  "name": "Nav Item: Examples",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "#0F1B2D",
+                  "cornerRadius": 8,
+                  "layout": "horizontal",
+                  "alignItems": "center",
+                  "gap": 8,
+                  "padding": [
+                    12,
+                    8
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "1Xjgc",
+                      "name": "itemExamplesText",
+                      "content": "Examples",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal",
+                      "fill": "#C7D2E1"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HEKso",
+                  "name": "Nav Item: Settings",
+                  "width": "fill_container",
+                  "height": 40,
+                  "fill": "#0F1B2D",
+                  "cornerRadius": 8,
+                  "layout": "horizontal",
+                  "alignItems": "center",
+                  "gap": 8,
+                  "padding": [
+                    12,
+                    8
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "t5pkN",
+                      "name": "itemSettingsText",
+                      "content": "Settings",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal",
+                      "fill": "#C7D2E1"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "kKGlw",
+          "name": "Main",
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": "#0B1220",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "gsI9g",
+              "name": "Header",
+              "width": "fill_container",
+              "height": 56,
+              "fill": "#0F1B2D",
+              "cornerRadius": 14,
+              "layout": "horizontal",
+              "alignItems": "center",
+              "gap": 12,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Hu0wB",
+                  "name": "headerTitle",
+                  "content": "Home",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "normal",
+                  "fill": "#E6EEF8"
+                },
+                {
+                  "type": "frame",
+                  "id": "ZRiDv",
+                  "name": "Spacer",
+                  "width": "fill_container",
+                  "height": 1,
+                  "fill": "#00000000"
+                },
+                {
+                  "type": "frame",
+                  "id": "O0yCc",
+                  "name": "Search",
+                  "width": 320,
+                  "height": 40,
+                  "fill": "#172A46",
+                  "cornerRadius": 12,
+                  "layout": "horizontal",
+                  "alignItems": "center",
+                  "gap": 8,
+                  "padding": [
+                    12,
+                    10
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ta7fW",
+                      "name": "searchPlaceholder",
+                      "content": "Search…",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal",
+                      "fill": "#9FB3C8"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "7P8Gy",
+              "name": "Content",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "11TMU",
+                  "name": "Card",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 24,
+                  "cornerRadius": 16,
+                  "fill": "#0F1B2D",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Grcc9",
+                      "name": "cardTitle",
+                      "content": "欢迎",
+                      "fontFamily": "Inter",
+                      "fontSize": 24,
+                      "fontWeight": "normal",
+                      "fill": "#E6EEF8"
+                    },
+                    {
+                      "type": "text",
+                      "id": "UoxsT",
+                      "name": "cardBody",
+                      "content": "这是一个 Pencil (.pen) 设计稿，用来描述一个带侧边栏的导航布局。",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fill": "#C7D2E1"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "EJ0Pj",
+              "name": "Footer",
+              "width": "fill_container",
+              "height": 40,
+              "fill": "#0F1B2D",
+              "cornerRadius": 14,
+              "padding": [
+                16,
+                10
+              ],
+              "layout": "horizontal",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "eET8a",
+                  "name": "footerLeft",
+                  "content": "v0.1",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal",
+                  "fill": "#9FB3C8"
+                },
+                {
+                  "type": "text",
+                  "id": "QSxpk",
+                  "name": "footerRight",
+                  "content": "designs/simple-navigation.pen",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal",
+                  "fill": "#9FB3C8"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

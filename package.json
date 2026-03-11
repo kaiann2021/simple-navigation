@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "build": "next build",
+    "build:extension": "npm run build && node post-build-extension.js",
+    "build:extension:all": "npm run build && node post-build-extension.js --targets=chrome,edge",
     "dev": "next dev",
     "lint": "eslint .",
     "start": "next start"

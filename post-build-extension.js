@@ -1,42 +1,60 @@
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 
 const outDir = path.join(__dirname, 'out');
 const assetsDir = path.join(outDir, 'assets');
+const distDir = path.join(__dirname, 'dist');
+const SUPPORTED_TARGETS = new Set(['chrome', 'edge']);
 
 function getAllFiles(dirPath, arrayOfFiles) {
   const files = fs.readdirSync(dirPath);
-  arrayOfFiles = arrayOfFiles || [];
+  const output = arrayOfFiles || [];
 
-  files.forEach(function (file) {
+  files.forEach((file) => {
     const fullPath = path.join(dirPath, file);
     if (fs.statSync(fullPath).isDirectory()) {
-      getAllFiles(fullPath, arrayOfFiles);
+      getAllFiles(fullPath, output);
     } else {
-      arrayOfFiles.push(fullPath);
+      output.push(fullPath);
     }
   });
 
-  return arrayOfFiles;
+  return output;
 }
 
-try {
+function parseTargetsFromArgs() {
+  const arg = process.argv.find((item) => item.startsWith('--targets='));
+  if (!arg) return ['chrome', 'edge'];
+
+  const targets = arg
+    .split('=')[1]
+    .split(',')
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+
+  if (targets.length === 0) return ['chrome', 'edge'];
+
+  const invalid = targets.filter((target) => !SUPPORTED_TARGETS.has(target));
+  if (invalid.length > 0) {
+    throw new Error(`Unsupported targets: ${invalid.join(', ')}. Supported values: chrome, edge`);
+  }
+
+  return [...new Set(targets)];
+}
+
+function patchOutDirectory() {
   console.log('Processing output directory...');
   const rootFiles = fs.readdirSync(outDir);
 
-  // Phase 1: Rename/Remove files in root
-  rootFiles.forEach(file => {
+  rootFiles.forEach((file) => {
     const fullPath = path.join(outDir, file);
 
-    // Remove .txt files (Next.js build artifacts)
     if (file.endsWith('.txt')) {
       console.log(`Removing ${file}...`);
       fs.rmSync(fullPath, { recursive: true, force: true });
       return;
     }
 
-    // Handle underscore files
     if (file.startsWith('_')) {
       if (file === '_next') {
         console.log('Renaming _next to assets...');
@@ -45,30 +63,26 @@ try {
         }
         fs.renameSync(fullPath, assetsDir);
       } else {
-        // Rename _not-found -> not-found
-        const newName = file.substring(1); // remove first char
+        const newName = file.substring(1);
         console.log(`Renaming ${file} to ${newName}...`);
         fs.renameSync(fullPath, path.join(outDir, newName));
       }
     }
   });
 
-  // Phase 2: Update Content References
   console.log('Updating file references...');
   const allFiles = getAllFiles(outDir);
 
-  allFiles.forEach(file => {
+  allFiles.forEach((file) => {
     if (file.endsWith('.html') || file.endsWith('.css') || file.endsWith('.js') || file.endsWith('.json')) {
       let content = fs.readFileSync(file, 'utf8');
       let changed = false;
 
-      // Replace /_next/ -> /assets/
       if (content.includes('/_next/')) {
         content = content.replace(/\/_next\//g, '/assets/');
         changed = true;
       }
 
-      // Replace /_not-found -> /not-found
       if (content.includes('/_not-found')) {
         content = content.replace(/\/_not-found/g, '/not-found');
         changed = true;
@@ -80,53 +94,80 @@ try {
       }
     }
   });
+}
 
-  console.log('Done! Extension ready.');
-
-  // Phase 3: Extract Inline Scripts (Manifest V3 Strictness)
+function extractInlineScripts() {
   console.log('Extracting inline scripts to external files...');
   const indexHtmlPath = path.join(outDir, 'index.html');
-  if (fs.existsSync(indexHtmlPath)) {
-    let htmlContent = fs.readFileSync(indexHtmlPath, 'utf8');
-    let scriptCount = 0;
+  if (!fs.existsSync(indexHtmlPath)) return;
 
-    // Regex to find inline scripts: <script>...</script> (without src attribute)
-    // We use a replacer function to modify the HTML content directly
-    htmlContent = htmlContent.replace(/<script(?![^>]*src=)([^>]*)>([\s\S]*?)<\/script>/gi, (match, attrs, content) => {
-      if (!content.trim()) return match; // Keep empty scripts or whitespace only as is (or remove them? keeping is safer)
+  let htmlContent = fs.readFileSync(indexHtmlPath, 'utf8');
+  let scriptCount = 0;
 
-      scriptCount++;
-      const filename = `script-${scriptCount}.js`;
-      const filePath = path.join(assetsDir, filename);
+  htmlContent = htmlContent.replace(/<script(?![^>]*src=)([^>]*)>([\s\S]*?)<\/script>/gi, (match, attrs, content) => {
+    if (!content.trim()) return match;
 
-      // Write content to new file
-      // Ensure assets dir exists (it should, but just in case)
-      if (!fs.existsSync(assetsDir)) fs.mkdirSync(assetsDir, { recursive: true });
+    scriptCount += 1;
+    const filename = `script-${scriptCount}.js`;
+    const filePath = path.join(assetsDir, filename);
 
-      fs.writeFileSync(filePath, content, 'utf8');
-      console.log(`Extracted inline script to assets/${filename}`);
+    if (!fs.existsSync(assetsDir)) fs.mkdirSync(assetsDir, { recursive: true });
 
-      // Return new script tag with src
-      return `<script src="/assets/${filename}"${attrs}></script>`;
-    });
+    fs.writeFileSync(filePath, content, 'utf8');
+    console.log(`Extracted inline script to assets/${filename}`);
 
-    fs.writeFileSync(indexHtmlPath, htmlContent, 'utf8');
-    console.log(`Extracted ${scriptCount} inline scripts from index.html`);
+    return `<script src="/assets/${filename}"${attrs}></script>`;
+  });
 
-    // Also remove any CSP hashes from manifest if we added them previously
-    const manifestPath = path.join(outDir, 'manifest.json');
+  fs.writeFileSync(indexHtmlPath, htmlContent, 'utf8');
+  console.log(`Extracted ${scriptCount} inline scripts from index.html`);
+
+  const manifestPath = path.join(outDir, 'manifest.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  if (manifest.content_security_policy) {
+    console.log('Resetting CSP to default strict mode in manifest...');
+    delete manifest.content_security_policy;
+  }
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), 'utf8');
+}
+
+function getBrowserDisplayName(target) {
+  return target === 'edge' ? 'Edge' : 'Chrome';
+}
+
+function createTargetPackages(targets) {
+  console.log(`Generating target packages: ${targets.join(', ')}...`);
+  if (fs.existsSync(distDir)) {
+    fs.rmSync(distDir, { recursive: true, force: true });
+  }
+  fs.mkdirSync(distDir, { recursive: true });
+
+  targets.forEach((target) => {
+    const targetDir = path.join(distDir, target);
+    fs.cpSync(outDir, targetDir, { recursive: true, force: true });
+
+    const manifestPath = path.join(targetDir, 'manifest.json');
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-    if (manifest.content_security_policy) {
-      console.log('Resetting CSP to default strict mode in manifest...');
-      delete manifest.content_security_policy; // Default is strict enough
-      // Or explicitly set it if needed:
-      // manifest.content_security_policy = { extension_pages: "script-src 'self'; object-src 'self'" };
-    }
-    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+    manifest.description = `静态导航新标签页，兼容 Chrome 和 Edge（${getBrowserDisplayName(target)} 构建）`;
+    fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2), 'utf8');
+
+    console.log(`Generated dist/${target}`);
+  });
+}
+
+try {
+  if (!fs.existsSync(outDir)) {
+    throw new Error('Missing out directory. Run "npm run build" first.');
   }
 
+  const targets = parseTargetsFromArgs();
+
+  patchOutDirectory();
+  extractInlineScripts();
+  createTargetPackages(targets);
+
+  console.log('Done! Extension packages are ready.');
 } catch (err) {
   console.error('Error post-processing:', err);
   process.exit(1);
 }
-

@@ -1,6 +1,6 @@
-# Simple Navigation (Chrome Extension Edition)
+# Simple Navigation (Chromium Extension Edition)
 
-A static navigation page project built with Next.js, supporting export as pure static resources, and specifically adapted for Chrome extensions (New Tab Page).
+A static navigation page project built with Next.js, supporting export as pure static resources, and specifically adapted for Chromium extensions (Chrome + Edge New Tab Page).
 
 [中文说明](./README_zh-CN.md)
 
@@ -8,10 +8,10 @@ A static navigation page project built with Next.js, supporting export as pure s
 
 *   **Clean & Simple**: No card design, just a clean list of navigation links.
 *   **Static Deployment**: Based on Next.js static export (`output: 'export'`), no Node.js backend required.
-*   **Chrome Extension Support**:
-    *   Can be used as a Chrome New Tab Page.
+*   **Chrome / Edge Extension Support**:
+    *   Can be used as a New Tab Page in Chrome and Edge.
     *   Automatically handles Manifest V3 CSP (Content Security Policy) restrictions.
-    *   Automatically handles Next.js route file naming (`_next` -> `assets`) to comply with Chrome extension specifications.
+    *   Automatically handles Next.js route file naming (`_next` -> `assets`) to comply with Chromium extension specifications.
 *   **Theme Switching**: Built-in Light and Dark modes, supports following system settings.
 *   **Integrated Search**: Top integrated search bar, supports quick switching between Baidu, Google, and Bing search engines.
 *   **Responsive Design**: Adapts to various screen sizes, based on Tailwind CSS.
@@ -44,28 +44,36 @@ Open [http://localhost:3000](http://localhost:3000) to preview.
 
 ## 📦 Build & Deploy
 
-### Build for Chrome Extension (Recommended)
+### Build for Chrome / Edge Extension (Recommended)
 
-This project includes a dedicated post-processing script `post-build-extension.js` to resolve various compatibility issues when loading Next.js pages as Chrome extensions (due to Chrome prohibiting filenames starting with `_` and strict restrictions on inline scripts).
+This project includes a dedicated post-processing script `post-build-extension.js` to resolve compatibility issues when loading Next.js pages as Chromium extensions (filenames starting with `_`, strict restrictions on inline scripts, etc).
 
 **Complete Build Command:**
 
 ```bash
-# 1. Build static files
-npm run build
-
-# 2. Run extension adaptation script (This step is crucial!)
-node post-build-extension.js
+# Build + post process + generate browser-specific packages
+npm run build:extension
 ```
 
-After building, the **`out`** directory is the final extension package.
+After building:
+
+* `out/` = universal Chromium package (can be loaded in both Chrome and Edge)
+* `dist/chrome/` = Chrome-oriented package
+* `dist/edge/` = Edge-oriented package
 
 ### Install to Chrome
 
 1.  Open Chrome browser and visit `chrome://extensions/`
 2.  Enable **"Developer mode"** in the top right corner.
 3.  Click on **"Load unpacked"** in the top left corner.
-4.  Select the **`out`** folder in the project root directory.
+4.  Select the **`dist/chrome`** folder (or `out`) in the project root directory.
+
+### Install to Edge
+
+1.  Open Edge browser and visit `edge://extensions/`
+2.  Enable **"Developer mode"** on the left side.
+3.  Click **"Load unpacked"**.
+4.  Select the **`dist/edge`** folder (or `out`) in the project root directory.
 
 ### Deploy as Static Website (Nginx/Vercel)
 
@@ -97,5 +105,5 @@ The generated `out` directory can be deployed directly to any static file server
 
 ## ⚠️ Notes
 
-*   **After Updating Code**: If you modify the code, you must re-run `npm run build` and `node post-build-extension.js`, then click the refresh button on the Chrome extensions page to take effect.
+*   **After Updating Code**: If you modify the code, re-run `npm run build:extension`, then click the refresh button on your browser's extensions page to take effect.
 *   **Search Function**: Search results open in a new tab by default.
